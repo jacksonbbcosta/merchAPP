@@ -1,50 +1,49 @@
-# Welcome to your Expo app 👋
+# 📦 MerchApp - Sistema de Gestão de Merchandising
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**Projeto de Extensão Universitária - Ciência da Computação** **Desenvolvedor:** Jackson Bruno Costa  
+**Data:** 21 de Fevereiro de 2026
 
-## Get started
+## 🚀 O Problema (Contexto Real)
+A equipe de merchandising da distribuidora gere centenas de produtos promocionais (brindes e materiais de marketing). O fluxo de pedidos era prejudicado porque as informações (nomes, códigos e fotos) estavam dispersas em **planilhas de Excel e pastas do Google Drive**, dificultando a consulta rápida via smartphone pelos gerentes de lojas e intermediários no dia a dia.
 
-1. Install dependencies
+## 🛠️ Solução Técnica
+O **merchAPP** centraliza todo o catálogo de merchandising numa aplicação mobile leve, rápida e intuitiva, permitindo a consulta de stock e visualização de itens em tempo real.
 
-   ```bash
-   npm install
-   ```
+### Tecnologias Utilizadas:
+* **React Native & Expo**: Framework principal para o desenvolvimento mobile.
+* **Context API**: Gestão de estado global para sincronização de dados entre as telas.
+* **Node.js & Sharp**: Script de automação para compressão de assets (imagens).
+* **EAS Build**: Ferramenta utilizada para gerar o artefacto final (.APK).
 
-2. Start the app
+### 📸 Demonstração do Sistema (Prints)
 
-   ```bash
-   npx expo start
-   ```
+| Tela de Login | Catálogo de Merchandising | Painel de Gestão (Admin) |
+| :---: | :---: | :---: |
+| ![Login](./assets/prints/login.png) | ![Catálogo](./assets/prints/catalogo.png) | ![Admin](./assets/prints/admin.png) |
 
-In the output, you'll find options to open the app in a
+## ⚙️ O Desafio da Otimização (Diferencial Técnico)
+Um dos maiores diferenciais deste projeto foi a gestão de média. Com mais de **200 fotos de alta resolução**, o build inicial atingiu **255 MB**, o que inviabilizava o uso em dispositivos com pouco armazenamento.
+* **Solução:** Implementação de um script customizado utilizando a biblioteca `sharp`.
+* **Resultado:** Redução do tamanho final do APK para **38.1 MB** (uma otimização de aproximadamente 85%), mantendo a qualidade visual necessária para a identificação dos produtos.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 📱 Funcionalidades
+* **Níveis de Acesso (RBAC)**: 
+    * **Admin**: Permissão total para adicionar novos brindes, editar stock e eliminar produtos.
+    * **User**: Acesso restrito apenas para consulta e visualização das fotos do catálogo.
+* **Busca Dinâmica**: Filtro por nome ou código do produto com resposta instantânea.
+* **Galeria Integrada**: Permite registar novos materiais promocionais usando a câmara do telemóvel.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 📂 Como Testar
+1. Descarregue o ficheiro `merchapp.apk`.
+2. Instale num dispositivo Android ou emulador (ex: **BlueStacks 5**).
+3. **Credenciais de Teste:**
+   - **Admin**: login `admin` | senha `admin`
+   - **Usuário**: login `user` | senha `123`
 
-## Get a fresh project
+---
 
-When you're ready, run:
+## 📈 Metodologia e Evolução
+O projeto foi desenvolvido seguindo a metodologia de **Prototipagem Ágil**. Nesta fase de MVP, os dados são geridos localmente para garantir o funcionamento em ambientes de stock com baixa conectividade. A arquitetura foi desenhada de forma modular, permitindo a futura migração para um banco de dados em nuvem (**Firebase**) sem necessidade de refatoração da interface.
 
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+**Jackson Bruno Costa** [GitHub Profile](https://github.com/jacksonbbcosta)
