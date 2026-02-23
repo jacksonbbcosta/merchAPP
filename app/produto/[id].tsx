@@ -5,7 +5,6 @@ import { Alert, Dimensions, Image, KeyboardAvoidingView, Modal, Platform, Scroll
 
 import { ProdutoContext } from '../../context/ProdutoContext';
 
-// Pegamos a largura e altura da tela para ajustar a imagem perfeitamente
 const { height } = Dimensions.get('window');
 
 export default function DetalhesProduto() {
@@ -20,7 +19,6 @@ export default function DetalhesProduto() {
 
   if (!produto) return null;
 
-  // FUNÇÕES NOVAS PARA OS BOTÕES DE + E -
   const incrementar = () => {
     const val = parseInt(novoEstoque) || 0;
     setNovoEstoque((val + 1).toString());
@@ -56,15 +54,12 @@ export default function DetalhesProduto() {
       style={{ flex: 1, backgroundColor: '#f0f4f8' }} 
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      {/* BOTÃO FLUTUANTE DE VOLTAR NO TOPO */}
       <TouchableOpacity style={styles.botaoVoltarFlutuante} onPress={() => router.back()}>
         <Text style={styles.textoBotaoFlutuante}>← Voltar</Text>
       </TouchableOpacity>
 
-      {/* AGORA TUDO ESTÁ DENTRO DO SCROLL (A IMAGEM ROLA JUNTO) */}
       <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
         
-        {/* IMAGEM (Ocupa um espaço grande, mas rola pra cima) */}
         <TouchableOpacity activeOpacity={0.9} onPress={() => setModalVisivel(true)} style={styles.areaImagem}>
           {produto.imagem ? (
             <Image source={produto.imagem} style={styles.imagemGrande} resizeMode="cover" />
@@ -75,7 +70,6 @@ export default function DetalhesProduto() {
           )}
         </TouchableOpacity>
 
-        {/* MODAL DE FOTO TELA CHEIA */}
         <Modal visible={modalVisivel} transparent={true} animationType="fade">
           <View style={styles.modalFundo}>
             <TouchableOpacity style={styles.botaoFecharModal} onPress={() => setModalVisivel(false)}>
@@ -87,7 +81,6 @@ export default function DetalhesProduto() {
           </View>
         </Modal>
 
-        {/* CAIXA DE DETALHES INFERIOR */}
         <View style={styles.caixaDetalhes}>
             
           <View style={styles.cabecalhoProduto}>
@@ -109,13 +102,11 @@ export default function DetalhesProduto() {
             </View>
           </View>
 
-          {/* PAINEL DE ADMINISTRAÇÃO REFORMULADO */}
           {isAdmin && (
             <View style={styles.painelAdmin}>
               <Text style={styles.tituloAdmin}>⚙️ PAINEL ADMINISTRATIVO</Text>
               <Text style={styles.textoEstoqueAdmin}>Atualizar Estoque Rápido:</Text>
               
-              {/* NOVO CONTROLE DE ESTOQUE COM BOTÕES + E - */}
               <View style={styles.stepperContainer}>
                 <TouchableOpacity style={styles.stepperBotao} onPress={decrementar}>
                   <Text style={styles.stepperTexto}>-</Text>
@@ -150,17 +141,15 @@ export default function DetalhesProduto() {
 }
 
 const styles = StyleSheet.create({
-  // BOTÃO FLUTUANTE
+  
   botaoVoltarFlutuante: { position: 'absolute', top: 50, left: 20, zIndex: 10, backgroundColor: 'rgba(0,0,0,0.6)', paddingHorizontal: 15, paddingVertical: 10, borderRadius: 20 },
   textoBotaoFlutuante: { color: '#fff', fontWeight: 'bold', fontSize: 14 },
 
-  // ÁREA DA IMAGEM
   areaImagem: { height: height * 0.45, backgroundColor: '#ddd' }, // Ocupa 45% da tela inicial
   imagemGrande: { width: '100%', height: '100%' },
   caixaSemFoto: { justifyContent: 'center', alignItems: 'center', backgroundColor: '#e0e0e0' },
   textoSemFoto: { color: '#888', fontWeight: 'bold' },
 
-  // CAIXA DE CONTEÚDO
   caixaDetalhes: { 
     flex: 1, backgroundColor: '#fff', borderTopLeftRadius: 30, borderTopRightRadius: 30, 
     marginTop: -30, padding: 25, paddingBottom: 50, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 10, elevation: 8 
@@ -177,7 +166,6 @@ const styles = StyleSheet.create({
   numeroEstoqueApenasVisual: { fontSize: 22, fontWeight: 'bold', color: '#28a745' },
   estoqueZerado: { color: '#dc3545' },
 
-  // PAINEL DE ADMINISTRAÇÃO E STEPPER
   painelAdmin: { backgroundColor: '#fff3cd', padding: 20, borderRadius: 15, borderWidth: 1, borderColor: '#ffeeba', marginBottom: 20 },
   tituloAdmin: { fontSize: 14, fontWeight: 'bold', color: '#856404', marginBottom: 15, textAlign: 'center' },
   textoEstoqueAdmin: { fontSize: 14, color: '#856404', marginBottom: 10, fontWeight: '600', textAlign: 'center' },
@@ -193,7 +181,6 @@ const styles = StyleSheet.create({
   botaoExcluir: { backgroundColor: '#dc3545', padding: 15, borderRadius: 10, alignItems: 'center' },
   textoBotaoExcluir: { color: '#fff', fontSize: 14, fontWeight: 'bold' },
 
-  // MODAL DE FOTO
   modalFundo: { flex: 1, backgroundColor: 'rgba(0,0,0,0.95)', justifyContent: 'center', alignItems: 'center' },
   imagemTelaCheia: { width: '100%', height: '80%' },
   botaoFecharModal: { position: 'absolute', top: 50, right: 20, zIndex: 10, padding: 15, backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 30 },

@@ -1,7 +1,8 @@
 // app/index.tsx
 import { useRouter } from 'expo-router';
-import { useContext, useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { Alert, Image, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ProdutoContext } from '../context/ProdutoContext';
 
 export default function LoginScreen() {
@@ -12,7 +13,6 @@ export default function LoginScreen() {
   const { setIsAdmin } = useContext(ProdutoContext);
 
   const handleLogin = () => {
-  
     const userDigitado = usuario.toLowerCase().trim();
 
     if (userDigitado === 'admin' && senha === 'admin') {
@@ -40,7 +40,11 @@ export default function LoginScreen() {
         
         <View style={styles.logoContainer}>
           <View style={styles.iconeLogo}>
-            <Text style={styles.iconeTexto}>📦</Text>
+            <Image 
+              source={require('../assets/images/icon.png')} 
+              style={styles.imagemLogo} 
+              resizeMode="contain"
+            />
           </View>
           <Text style={styles.tituloApp}>MerchApp</Text>
           <Text style={styles.subtituloApp}>Catálogo & Estoque</Text>
@@ -81,12 +85,28 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#007BFF' }, // Fundo azul corporativo
+  safeArea: { flex: 1, backgroundColor: '#007BFF' },
   container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
   
-  logoContainer: { alignItems: 'center', marginBottom: 40 },
-  iconeLogo: { backgroundColor: '#fff', width: 80, height: 80, borderRadius: 40, justifyContent: 'center', alignItems: 'center', marginBottom: 15, shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 10, elevation: 5 },
-  iconeTexto: { fontSize: 40 },
+  logoContainer: { alignItems: 'center', marginBottom: 25 },
+  iconeLogo: { 
+    backgroundColor: '#fff', 
+    width: 80, 
+    height: 80, 
+    borderRadius: 40, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    marginBottom: 15, 
+    shadowColor: '#000', 
+    shadowOpacity: 0.2, 
+    shadowRadius: 10, 
+    elevation: 5,
+    overflow: 'hidden'
+  },
+  imagemLogo: { 
+    width: 75, 
+    height: 75, 
+  },
   tituloApp: { fontSize: 32, fontWeight: '900', color: '#fff', letterSpacing: 1 },
   subtituloApp: { fontSize: 16, color: '#e0f0ff', fontWeight: '500', marginTop: 5 },
 

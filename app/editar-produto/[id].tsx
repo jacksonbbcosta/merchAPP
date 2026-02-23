@@ -1,10 +1,9 @@
 // app/editar-produto/[id].tsx
-import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { ProdutoContext } from '../context/ProdutoContext';
+import { ProdutoContext } from '../../context/ProdutoContext';
 
 export default function EditarProdutoScreen() {
   const router = useRouter();
@@ -58,27 +57,11 @@ export default function EditarProdutoScreen() {
 
   const escolherImagem = async () => {
     let resultado = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
-      quality: 1,
+      quality: 0.8,
     });
-
-    if (!resultado.canceled) {
-      const uriOriginal = resultado.assets[0].uri;
-
-      try {
-        const imagemComprimida = await ImageManipulator.manipulateAsync(
-          uriOriginal,
-          [],
-          { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
-        );
-
-        setNovaImagemUri(imagemComprimida.uri);
-      } catch (error) {
-        console.error("Erro ao comprimir imagem:", error);
-        Alert.alert("Erro", "Não foi possível processar a imagem.");
-      }
-    }
+    if (!resultado.canceled) setNovaImagemUri(resultado.assets[0].uri);
   };
 
   const handleSalvar = async () => {
@@ -122,6 +105,7 @@ export default function EditarProdutoScreen() {
     }
   };
 
+  // FUNÇÃO DE EXCLUSÃO
   const confirmarExclusao = async () => {
     setSalvando(true);
     const urlApi = 'https://www.jbbc.com.br/api_merchapp/excluir.php';
@@ -146,7 +130,7 @@ export default function EditarProdutoScreen() {
 
   const handleExcluir = () => {
     Alert.alert(
-      'Atenção Extrema',
+      'Atenção',
       'Tem certeza que deseja EXCLUIR este produto? A foto e os dados serão apagados permanentemente.',
       [
         { text: 'Cancelar', style: 'cancel' },
@@ -165,12 +149,8 @@ export default function EditarProdutoScreen() {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        
-        <View style={styles.header}>
-          <Text style={styles.titulo}>Editar Produto</Text>
-          <Text style={styles.subtitulo}>Atualize as informações do estoque</Text>
-        </View>
+      <ScrollView style={styles.container}>
+        <Text style={styles.titulo}>Editar Produto</Text>
 
         <View style={styles.formulario}>
           
@@ -180,40 +160,25 @@ export default function EditarProdutoScreen() {
             ) : imagemAtual ? (
               <Image source={{ uri: `${imagemAtual}?t=${new Date().getTime()}` }} style={styles.previewFoto} resizeMode="cover" />
             ) : (
-              <TouchableOpacity activeOpacity={0.7} style={styles.caixaSemFoto} onPress={escolherImagem}>
-                <Text style={styles.iconeCamera}>📷</Text>
-                <Text style={styles.textoSemFoto}>Toque para adicionar foto</Text>
-              </TouchableOpacity>
+              <View style={styles.caixaSemFoto}><Text style={styles.textoSemFoto}>Sem Foto</Text></View>
             )}
             
-            {(novaImagemUri || imagemAtual) && (
-              <TouchableOpacity style={styles.botaoFoto} onPress={escolherImagem}>
-                <Text style={styles.textoBotaoFoto}>TROCAR FOTO</Text>
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity style={styles.botaoFoto} onPress={escolherImagem}>
+              <Text style={styles.textoBotaoFoto}>TROCAR FOTO</Text>
+            </TouchableOpacity>
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Código do Produto (Não editável)</Text>
-            <TextInput style={[styles.input, styles.inputBloqueado]} value={id as string} editable={false} />
-          </View>
+          <Text style={styles.label}>Código do Produto (Não editável)</Text>
+          <TextInput style={[styles.input, styles.inputBloqueado]} value={id as string} editable={false} />
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Descrição do Produto</Text>
-            <TextInput style={styles.input} value={descricao} onChangeText={setDescricao} placeholderTextColor="#a0aec0" />
-          </View>
+          <Text style={styles.label}>Descrição do Produto</Text>
+          <TextInput style={styles.input} value={descricao} onChangeText={setDescricao} />
 
-          <View style={styles.linhaDupla}>
-            <View style={[styles.inputGroup, { flex: 1, marginRight: 10 }]}>
-              <Text style={styles.label}>Preço (R$)</Text>
-              <TextInput style={styles.input} value={preco} onChangeText={setPreco} keyboardType="numeric" placeholderTextColor="#a0aec0" />
-            </View>
+          <Text style={styles.label}>Preço Unitário (Use vírgula)</Text>
+          <TextInput style={styles.input} value={preco} onChangeText={setPreco} keyboardType="numeric" />
 
-            <View style={[styles.inputGroup, { flex: 1, marginLeft: 10 }]}>
-              <Text style={styles.label}>Estoque (Un.)</Text>
-              <TextInput style={styles.input} value={estoque} onChangeText={setEstoque} keyboardType="numeric" placeholderTextColor="#a0aec0" />
-            </View>
-          </View>
+          <Text style={styles.label}>Quantidade em Estoque</Text>
+          <TextInput style={styles.input} value={estoque} onChangeText={setEstoque} keyboardType="numeric" />
 
           <View style={styles.botoesContainer}>
             <TouchableOpacity style={styles.botaoCancelar} onPress={() => router.back()} disabled={salvando}>
@@ -221,11 +186,7 @@ export default function EditarProdutoScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.botaoSalvar} onPress={handleSalvar} disabled={salvando}>
-              {salvando ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.textoBotaoSalvar}>SALVAR PRODUTO</Text>
-              )}
+              <Text style={styles.textoBotaoSalvar}>{salvando ? 'SALVANDO...' : 'SALVAR'}</Text>
             </TouchableOpacity>
           </View>
 
@@ -240,102 +201,25 @@ export default function EditarProdutoScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f4f7f6' },
-  centralizado: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f4f7f6' },
+  container: { flex: 1, backgroundColor: '#f0f4f8' },
+  centralizado: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  titulo: { fontSize: 24, fontWeight: 'bold', color: '#333', marginTop: 30, marginBottom: 20, textAlign: 'center' },
+  formulario: { backgroundColor: '#fff', marginHorizontal: 20, padding: 20, borderRadius: 15, elevation: 3, marginBottom: 30 },
+  areaFoto: { alignItems: 'center', marginBottom: 20 },
+  previewFoto: { width: 140, height: 200, borderRadius: 10, marginBottom: 10 }, 
+  caixaSemFoto: { width: 140, height: 200, borderRadius: 10, backgroundColor: '#eee', justifyContent: 'center', alignItems: 'center', marginBottom: 10, borderWidth: 1, borderColor: '#ccc', borderStyle: 'dashed' },
+  textoSemFoto: { fontSize: 12, color: '#888' },
+  botaoFoto: { backgroundColor: '#FFC107', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 8 }, 
+  textoBotaoFoto: { color: '#000', fontWeight: 'bold', fontSize: 12 },
+  label: { fontSize: 14, fontWeight: 'bold', color: '#555', marginBottom: 5 },
+  input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, height: 45, paddingHorizontal: 15, marginBottom: 20, fontSize: 16, backgroundColor: '#fafafa' },
+  inputBloqueado: { backgroundColor: '#e9ecef', color: '#6c757d' }, 
+  botoesContainer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 },
+  botaoCancelar: { flex: 1, backgroundColor: '#ddd', padding: 15, borderRadius: 8, alignItems: 'center', marginRight: 10 },
+  textoBotaoCancelar: { color: '#555', fontWeight: 'bold', fontSize: 16 },
+  botaoSalvar: { flex: 1, backgroundColor: '#28a745', padding: 15, borderRadius: 8, alignItems: 'center', marginLeft: 10 },
+  textoBotaoSalvar: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
   
-  header: { alignItems: 'center', marginTop: 40, marginBottom: 20 },
-  titulo: { fontSize: 26, fontWeight: '900', color: '#1a202c' },
-  subtitulo: { fontSize: 14, color: '#718096', marginTop: 4 },
-
-  formulario: { 
-    backgroundColor: '#fff', 
-    marginHorizontal: 20, 
-    padding: 25, 
-    borderRadius: 20, 
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 3, 
-    marginBottom: 40 
-  },
-  
-  areaFoto: { alignItems: 'center', marginBottom: 25 },
-  previewFoto: { width: 150, height: 150, borderRadius: 16, marginBottom: 15, backgroundColor: '#edf2f7' }, 
-  caixaSemFoto: { 
-    width: 150, 
-    height: 150, 
-    borderRadius: 16, 
-    backgroundColor: '#f8fafc', 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    marginBottom: 10, 
-    borderWidth: 2, 
-    borderColor: '#e2e8f0', 
-    borderStyle: 'dashed' 
-  },
-  iconeCamera: { fontSize: 32, marginBottom: 8 },
-  textoSemFoto: { fontSize: 12, color: '#a0aec0', fontWeight: '600', textAlign: 'center', paddingHorizontal: 10 },
-  
-  botaoFoto: { backgroundColor: '#e2e8f0', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 10 }, 
-  textoBotaoFoto: { color: '#4a5568', fontWeight: 'bold', fontSize: 12 },
-  
-  inputGroup: { marginBottom: 18 },
-  label: { fontSize: 13, fontWeight: 'bold', color: '#4a5568', marginBottom: 8, marginLeft: 4 },
-  input: { 
-    borderWidth: 1, 
-    borderColor: '#e2e8f0', 
-    borderRadius: 12, 
-    height: 50, 
-    paddingHorizontal: 15, 
-    fontSize: 16, 
-    backgroundColor: '#f8fafc',
-    color: '#2d3748'
-  },
-  inputBloqueado: { 
-    backgroundColor: '#edf2f7', 
-    color: '#a0aec0',
-    borderColor: '#edf2f7'
-  },
-  
-  linhaDupla: { flexDirection: 'row', justifyContent: 'space-between' },
-
-  botoesContainer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 },
-  
-  botaoCancelar: { 
-    flex: 1, 
-    backgroundColor: '#fff', 
-    padding: 15, 
-    borderRadius: 12, 
-    alignItems: 'center', 
-    marginRight: 10,
-    borderWidth: 1,
-    borderColor: '#cbd5e0'
-  },
-  textoBotaoCancelar: { color: '#718096', fontWeight: 'bold', fontSize: 15 },
-  
-  botaoSalvar: { 
-    flex: 1, 
-    backgroundColor: '#007BFF', 
-    padding: 15, 
-    borderRadius: 12, 
-    alignItems: 'center', 
-    marginLeft: 10,
-    shadowColor: '#007BFF',
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 4
-  },
-  textoBotaoSalvar: { color: '#fff', fontWeight: 'bold', fontSize: 15 },
-
-  botaoExcluir: { 
-    backgroundColor: '#fff', 
-    padding: 15, 
-    borderRadius: 12, 
-    alignItems: 'center', 
-    marginTop: 25,
-    borderWidth: 1,
-    borderColor: '#fc8181'
-  },
-  textoBotaoExcluir: { color: '#e53e3e', fontWeight: 'bold', fontSize: 15 },
+  botaoExcluir: { backgroundColor: '#dc3545', padding: 15, borderRadius: 8, alignItems: 'center', marginTop: 25 },
+  textoBotaoExcluir: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
 });
