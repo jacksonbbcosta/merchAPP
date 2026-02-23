@@ -18,7 +18,7 @@ O MerchApp centraliza todo o catálogo de merchandising em uma aplicação mobil
 
 ### Demonstração do Sistema
 
-| Tela de Login | Catálogo de Merchandising | Painel de Gestão (Admin) |
+| Tela de Login | Catálogo de Merchandising | Add Novo Produto (Admin) |
 | :---: | :---: | :---: |
 | ![Login](./assets/prints/login.jpg) | ![Catálogo](./assets/prints/catalogo.jpg) | ![Admin](./assets/prints/admin.png) |
 
