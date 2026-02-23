@@ -20,7 +20,7 @@ O MerchApp centraliza todo o catálogo de merchandising em uma aplicação mobil
 
 | Tela de Login | Catálogo de Merchandising | Painel de Gestão (Admin) |
 | :---: | :---: | :---: |
-| ![Login](./assets/prints/login.png) | ![Catálogo](./assets/prints/catalogo.png) | ![Admin](./assets/prints/admin.png) |
+| ![Login](./assets/prints/login.jpg) | ![Catálogo](./assets/prints/catalogo.jpg) | ![Admin](./assets/prints/admin.png) |
 
 ## O Desafio da Otimização (Diferencial Técnico)
 Um dos maiores desafios técnicos deste projeto foi a gestão do tráfego de mídias. O upload de fotografias em resolução original (que atualmente variam entre 5MB e 10MB em smartphones modernos) sobrecarregaria a largura de banda do usuário e o armazenamento do servidor de hospedagem.
