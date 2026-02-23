@@ -1,49 +1,51 @@
-# 📦 MerchApp - Sistema de Gestão de Merchandising
+# MerchApp - Sistema de Gestão de Merchandising
 
-**Projeto de Extensão Universitária - Ciência da Computação** **Desenvolvedor:** Jackson Bruno Costa  
-**Data:** 21 de Fevereiro de 2026
+**Projeto de Extensão Universitária - Ciência da Computação** **Desenvolvedor:** Jackson Costa  
+**Data:** 22 de Fevereiro de 2026
 
-## 🚀 O Problema (Contexto Real)
-A equipe de merchandising da distribuidora gere centenas de produtos promocionais (brindes e materiais de marketing). O fluxo de pedidos era prejudicado porque as informações (nomes, códigos e fotos) estavam dispersas em **planilhas de Excel e pastas do Google Drive**, dificultando a consulta rápida via smartphone pelos gerentes de lojas e intermediários no dia a dia.
+## O Problema (Contexto Real)
+A equipe de merchandising da distribuidora gere centenas de produtos promocionais (brindes e materiais de marketing). O fluxo de pedidos era prejudicado porque as informações (nomes, códigos e fotos) estavam dispersas em planilhas de Excel e pastas do Google Drive, dificultando a consulta rápida via smartphone pelos gerentes de lojas e intermediários no dia a dia.
 
-## 🛠️ Solução Técnica
-O **merchAPP** centraliza todo o catálogo de merchandising numa aplicação mobile leve, rápida e intuitiva, permitindo a consulta de stock e visualização de itens em tempo real.
+## Solução Técnica
+O MerchApp centraliza todo o catálogo de merchandising em uma aplicação mobile leve, rápida e intuitiva, permitindo a consulta de estoque e visualização de itens em tempo real. A arquitetura foi desenvolvida para garantir alta disponibilidade e baixo consumo de dados móveis.
 
 ### Tecnologias Utilizadas:
-* **React Native & Expo**: Framework principal para o desenvolvimento mobile.
-* **Context API**: Gestão de estado global para sincronização de dados entre as telas.
-* **Node.js & Sharp**: Script de automação para compressão de assets (imagens).
-* **EAS Build**: Ferramenta utilizada para gerar o artefacto final (.APK).
+* **React Native & Expo**: Framework principal para o desenvolvimento do frontend mobile.
+* **Context API**: Gestão de estado global para controle de autenticação e níveis de acesso.
+* **PHP & MySQL (Hostinger)**: Desenvolvimento de uma API RESTful para realizar o CRUD e persistência de dados em um banco de dados relacional em nuvem.
+* **Expo Image Manipulator**: Biblioteca para processamento e compressão de imagens nativamente no dispositivo (client-side) antes do envio ao servidor.
+* **EAS Build**: Ferramenta utilizada para a integração contínua e geração do artefato final (.APK).
 
-### 📸 Demonstração do Sistema (Prints)
+### Demonstração do Sistema
 
 | Tela de Login | Catálogo de Merchandising | Painel de Gestão (Admin) |
 | :---: | :---: | :---: |
 | ![Login](./assets/prints/login.png) | ![Catálogo](./assets/prints/catalogo.png) | ![Admin](./assets/prints/admin.png) |
 
-## ⚙️ O Desafio da Otimização (Diferencial Técnico)
-Um dos maiores diferenciais deste projeto foi a gestão de média. Com mais de **200 fotos de alta resolução**, o build inicial atingiu **255 MB**, o que inviabilizava o uso em dispositivos com pouco armazenamento.
-* **Solução:** Implementação de um script customizado utilizando a biblioteca `sharp`.
-* **Resultado:** Redução do tamanho final do APK para **38.1 MB** (uma otimização de aproximadamente 85%), mantendo a qualidade visual necessária para a identificação dos produtos.
+## O Desafio da Otimização (Diferencial Técnico)
+Um dos maiores desafios técnicos deste projeto foi a gestão do tráfego de mídias. O upload de fotografias em resolução original (que atualmente variam entre 5MB e 10MB em smartphones modernos) sobrecarregaria a largura de banda do usuário e o armazenamento do servidor de hospedagem.
 
-## 📱 Funcionalidades
-* **Níveis de Acesso (RBAC)**: 
-    * **Admin**: Permissão total para adicionar novos brindes, editar stock e eliminar produtos.
-    * **User**: Acesso restrito apenas para consulta e visualização das fotos do catálogo.
-* **Busca Dinâmica**: Filtro por nome ou código do produto com resposta instantânea.
-* **Galeria Integrada**: Permite registar novos materiais promocionais usando a câmara do telemóvel.
+* **Solução:** Implementação de um pipeline de compressão nativa no dispositivo do usuário antes do envio da requisição (payload). Utilizando a biblioteca `expo-image-manipulator`, as imagens capturadas ou selecionadas da galeria são interceptadas.
+* **Resultado:** As fotos são automaticamente redimensionadas e comprimidas para o formato JPEG (70% de qualidade). Isso reduziu o tamanho médio dos arquivos enviados via `multipart/form-data` para cerca de 100KB, resultando em uma otimização de tráfego de rede superior a 90% e garantindo uploads quase instantâneos, mesmo em conexões 3G.
 
-## 📂 Como Testar
-1. Descarregue o ficheiro `merchapp.apk`.
-2. Instale num dispositivo Android ou emulador (ex: **BlueStacks 5**).
+## Funcionalidades
+* **Autenticação e Níveis de Acesso (RBAC)**: 
+    * **Admin**: Permissão total para adicionar novos brindes, atualizar informações de estoque, alterar fotografias e excluir produtos do banco de dados (CRUD completo).
+    * **Usuário**: Acesso restrito em modo de leitura (Read-Only) para consulta do catálogo e pesquisa de disponibilidade.
+* **Busca Dinâmica**: Filtro de pesquisa no lado do cliente e do servidor (via API) para localização de itens por código ou descrição, com resposta em tempo real.
+* **Gestão de Imagens Integrada**: Interface unificada para upload e substituição de materiais promocionais utilizando a câmera do dispositivo ou a galeria local.
+
+## Como Testar
+1. Faça o download do arquivo `merchapp.apk`.
+2. Instale em um dispositivo Android físico ou emulador (ex: BlueStacks ou Android Studio).
 3. **Credenciais de Teste:**
-   - **Admin**: login `admin` | senha `admin`
-   - **Usuário**: login `user` | senha `123`
+   - **Administrador**: login `admin` | senha `admin`
+   - **Usuário Padrão**: login `user` | senha `user`
 
 ---
 
-## 📈 Metodologia e Evolução
-O projeto foi desenvolvido seguindo a metodologia de **Prototipagem Ágil**. Nesta fase de MVP, os dados são geridos localmente para garantir o funcionamento em ambientes de stock com baixa conectividade. A arquitetura foi desenhada de forma modular, permitindo a futura migração para um banco de dados em nuvem (**Firebase**) sem necessidade de refatoração da interface.
+## Metodologia e Arquitetura Atual
+O projeto foi desenvolvido seguindo a metodologia de Prototipagem Ágil. O sistema evoluiu de um MVP local para uma aplicação plenamente funcional conectada à nuvem. Atualmente, o frontend (Mobile) opera de forma totalmente desacoplada do backend, comunicando-se exclusivamente via requisições HTTP (Fetch API) com os scripts PHP hospedados, garantindo escalabilidade e segurança na manipulação das regras de negócio.
 
 ---
-**Jackson Bruno Costa** [GitHub Profile](https://github.com/jacksonbbcosta)
+**Jackson Bruno Costa** | [GitHub Profile](https://github.com/jacksonbbcosta) | jacksonbragacosta@gmail.com
