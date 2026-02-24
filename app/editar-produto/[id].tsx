@@ -1,5 +1,5 @@
 // app/editar-produto/[id].tsx
-import * as ImageManipulator from 'expo-image-manipulator'; // ✅ BIBLIOTECA DE COMPRESSÃO (ESSENCIAL)
+import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useEffect, useState } from 'react';
@@ -20,7 +20,6 @@ export default function EditarProdutoScreen() {
   const [carregando, setCarregando] = useState(true);
   const [salvando, setSalvando] = useState(false);
 
-  // 1. Verificação de Segurança
   useEffect(() => {
     if (isAdmin === false || isAdmin === null) {
       Alert.alert('Acesso Negado', 'Apenas administradores podem editar.');
@@ -28,7 +27,6 @@ export default function EditarProdutoScreen() {
     }
   }, [isAdmin]);
 
-  // 2. Carregar Dados do Produto
   useEffect(() => {
     const carregarProduto = async () => {
       try {
@@ -37,7 +35,6 @@ export default function EditarProdutoScreen() {
         const json = await resposta.json();
 
         if (json.status === 'sucesso') {
-          // Busca o produto específico no array retornado
           const produtoEncontrado = json.dados.find((p: any) => String(p.codigo) === String(id));
           
           if (produtoEncontrado) {
@@ -60,11 +57,10 @@ export default function EditarProdutoScreen() {
     if (id && isAdmin) carregarProduto();
   }, [id, isAdmin]);
 
-  // 3. Escolher e Comprimir Imagem (CORREÇÃO AQUI)
   const escolherImagem = async () => {
     let resultado = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'], 
-      allowsEditing: false, // Mantém tamanho original (sem corte quadrado)
+      allowsEditing: false,
       quality: 1,
     });
 
@@ -72,10 +68,9 @@ export default function EditarProdutoScreen() {
       const uriOriginal = resultado.assets[0].uri;
 
       try {
-        // ✅ O SEGREDO: Converte para JPG leve antes de enviar
         const imagemComprimida = await ImageManipulator.manipulateAsync(
           uriOriginal,
-          [], // Sem redimensionar (mantém largura/altura)
+          [],
           { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
         );
 
@@ -86,8 +81,6 @@ export default function EditarProdutoScreen() {
       }
     }
   };
-
-  // 4. Salvar Alterações
   const handleSalvar = async () => {
     if (!descricao || !preco || !estoque) {
       Alert.alert('Atenção', 'Preencha todos os campos obrigatórios.');
@@ -103,8 +96,6 @@ export default function EditarProdutoScreen() {
     dadosFormulario.append('descricao', descricao.toUpperCase());
     dadosFormulario.append('preco', precoFormatado);
     dadosFormulario.append('estoque', estoque);
-
-    // Só anexa a imagem se o usuário tiver escolhido uma nova
     if (novaImagemUri) {
       dadosFormulario.append('imagem', {
         uri: novaImagemUri,
@@ -119,7 +110,6 @@ export default function EditarProdutoScreen() {
         body: dadosFormulario,
         headers: {
             'Accept': 'application/json',
-            // Não precisa setar Content-Type multipart aqui, o fetch faz automático
         }
       });
       
@@ -137,8 +127,6 @@ export default function EditarProdutoScreen() {
       setSalvando(false);
     }
   };
-
-  // 5. Excluir Produto
   const confirmarExclusao = async () => {
     setSalvando(true);
     const urlApi = 'https://www.jbbc.com.br/api_merchapp/excluir.php';
@@ -192,7 +180,7 @@ export default function EditarProdutoScreen() {
         <View style={styles.formulario}>
           
           <View style={styles.areaFoto}>
-            {/* Lógica de Exibição da Foto: Nova > Atual > Sem Foto */}
+            
             {novaImagemUri ? (
               <Image source={{ uri: novaImagemUri }} style={styles.previewFoto} resizeMode="cover" />
             ) : imagemAtual ? (
