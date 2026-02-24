@@ -1,6 +1,6 @@
 # MerchApp - Sistema de Gestão de Merchandising
 
-**Projeto de Extensão Universitária - Ciência da Computação** **Desenvolvedor:** Jackson Costa  
+**Projeto de Extensão Universitária - Ciência da Computação** **Desenvolvedor:** Jackson Bruno Costa  
 **Data:** 22 de Fevereiro de 2026
 
 ## O Problema (Contexto Real)
@@ -18,9 +18,9 @@ O MerchApp centraliza todo o catálogo de merchandising em uma aplicação mobil
 
 ### Demonstração do Sistema
 
-| Tela de Login | Catálogo de Merchandising | Painel de Gestão (Admin) |
+| Tela de Login | Catálogo de Merchandising | Add Novo Produto (Admin) |
 | :---: | :---: | :---: |
-| ![Login](./assets/prints/login.png) | ![Catálogo](./assets/prints/catalogo.png) | ![Admin](./assets/prints/admin.png) |
+| ![Login](./assets/prints/login.jpg) | ![Catálogo](./assets/prints/catalogo.jpg) | ![Admin](./assets/prints/admin.png) |
 
 ## O Desafio da Otimização (Diferencial Técnico)
 Um dos maiores desafios técnicos deste projeto foi a gestão do tráfego de mídias. O upload de fotografias em resolução original (que atualmente variam entre 5MB e 10MB em smartphones modernos) sobrecarregaria a largura de banda do usuário e o armazenamento do servidor de hospedagem.
@@ -36,9 +36,10 @@ Um dos maiores desafios técnicos deste projeto foi a gestão do tráfego de mí
 * **Gestão de Imagens Integrada**: Interface unificada para upload e substituição de materiais promocionais utilizando a câmera do dispositivo ou a galeria local.
 
 ## Como Testar
-1. Faça o download do arquivo `merchapp.apk`.
-2. Instale em um dispositivo Android físico ou emulador (ex: BlueStacks ou Android Studio).
-3. **Credenciais de Teste:**
+1. Faça o download do aplicativo através deste **[Link Oficial de Build (Expo EAS)](https://expo.dev/accounts/jacksonbbcosta/projects/merchAPP/builds/c1ab2257-b098-439b-934f-9d25d50a3848)**.
+2. Na página do Expo, clique em "Download" para baixar o arquivo `.apk`.
+3. Instale em um dispositivo Android físico ou emulador (ex: BlueStacks ou Android Studio).
+4. **Credenciais de Teste:**
    - **Administrador**: login `admin` | senha `admin`
    - **Usuário Padrão**: login `user` | senha `user`
 
