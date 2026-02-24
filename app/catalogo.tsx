@@ -17,11 +17,8 @@ export default function CatalogoScreen() {
   const [pagina, setPagina] = useState(1);
   const [fimDosDados, setFimDosDados] = useState(false);
   
-  // ✅ NOVO: Controla a versão das imagens
   const [cacheBuster, setCacheBuster] = useState(new Date().getTime());
 
-  // ✅ SUBSTITUÍMOS O useEffect PELO useFocusEffect
-  // Isso faz a lista recarregar sozinha sempre que você volta da tela de Editar/Novo
   useFocusEffect(
     useCallback(() => {
       if (isAdmin !== null && isAdmin !== undefined) {
@@ -35,7 +32,7 @@ export default function CatalogoScreen() {
 
     try {
       const limite = 20;
-      // O parametro 't' aqui garante que o JSON venha fresco
+      
       const url = `https://www.jbbc.com.br/api_merchapp/produtos.php?pagina=${numeroPagina}&limite=${limite}&busca=${pesquisa}&t=${new Date().getTime()}`;
       
       const resposta = await fetch(url);
@@ -50,7 +47,6 @@ export default function CatalogoScreen() {
 
         if (recarregar) {
           setProdutos(json.dados);
-          // ✅ ATUALIZA AS IMAGENS: Gera um novo número para quebrar o cache das fotos
           setCacheBuster(new Date().getTime());
         } else {
           setProdutos([...produtos, ...json.dados]);
@@ -127,12 +123,10 @@ export default function CatalogoScreen() {
       <FlatList
         data={produtos}
         keyExtractor={(item, index) => item?.codigo ? String(item.codigo) : String(index)}
-        // ✅ TRUQUE DO CACHE AQUI EMBAIXO:
         renderItem={({ item }) => (
             <CardProduto 
                 produto={{
                     ...item,
-                    // Se tiver imagem, adiciona ?t=NUMERO_NOVO no final para forçar atualização
                     imagem: item.imagem ? `${item.imagem}?t=${cacheBuster}` : null
                 }} 
             />
