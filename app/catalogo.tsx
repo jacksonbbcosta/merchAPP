@@ -1,13 +1,12 @@
 // app/catalogo.tsx
-import { useRouter } from 'expo-router';
-import React, { useContext, useEffect, useState } from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
+import React, { useCallback, useContext, useState } from 'react'; // ✅ Adicionado useCallback
 import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import CardProduto from '../components/CardProduto';
 import { ProdutoContext } from '../context/ProdutoContext';
 
 export default function CatalogoScreen() {
   const router = useRouter();
-  
   const { isAdmin } = useContext(ProdutoContext);
 
   const [produtos, setProdutos] = useState<any[]>([]);
@@ -17,25 +16,32 @@ export default function CatalogoScreen() {
   const [carregandoMais, setCarregandoMais] = useState(false);
   const [pagina, setPagina] = useState(1);
   const [fimDosDados, setFimDosDados] = useState(false);
+  
+  // ✅ NOVO: Controla a versão das imagens
+  const [cacheBuster, setCacheBuster] = useState(new Date().getTime());
 
-  useEffect(() => {
-    if (isAdmin === undefined || isAdmin === null) {
-      router.replace('/'); 
-    }
-  }, [isAdmin]);
+  // ✅ SUBSTITUÍMOS O useEffect PELO useFocusEffect
+  // Isso faz a lista recarregar sozinha sempre que você volta da tela de Editar/Novo
+  useFocusEffect(
+    useCallback(() => {
+      if (isAdmin !== null && isAdmin !== undefined) {
+        buscarProdutos(1, true);
+      }
+    }, [isAdmin])
+  );
 
   const buscarProdutos = async (numeroPagina = 1, recarregar = false) => {
     if (fimDosDados && !recarregar) return;
 
     try {
       const limite = 20;
+      // O parametro 't' aqui garante que o JSON venha fresco
       const url = `https://www.jbbc.com.br/api_merchapp/produtos.php?pagina=${numeroPagina}&limite=${limite}&busca=${pesquisa}&t=${new Date().getTime()}`;
       
       const resposta = await fetch(url);
       const json = await resposta.json();
 
       if (json.status === 'sucesso') {
-        
         setTotalProdutos(json.total || 0);
 
         if (json.dados.length < limite) {
@@ -44,6 +50,8 @@ export default function CatalogoScreen() {
 
         if (recarregar) {
           setProdutos(json.dados);
+          // ✅ ATUALIZA AS IMAGENS: Gera um novo número para quebrar o cache das fotos
+          setCacheBuster(new Date().getTime());
         } else {
           setProdutos([...produtos, ...json.dados]);
         }
@@ -56,19 +64,11 @@ export default function CatalogoScreen() {
     }
   };
 
-  useEffect(() => {
-    if (isAdmin !== null && isAdmin !== undefined) {
-      buscarProdutos(1, true);
-    }
-  }, [isAdmin]);
-
   const executarPesquisa = () => {
-    if (isAdmin !== null && isAdmin !== undefined) {
-      setPagina(1);
-      setFimDosDados(false);
-      setCarregando(true);
-      buscarProdutos(1, true);
-    }
+    setPagina(1);
+    setFimDosDados(false);
+    setCarregando(true);
+    buscarProdutos(1, true);
   };
 
   const carregarMais = () => {
@@ -85,7 +85,6 @@ export default function CatalogoScreen() {
     setFimDosDados(false);
     setPagina(1);
     setCarregando(true);
-
     setTimeout(() => buscarProdutos(1, true), 100); 
   };
 
@@ -128,7 +127,16 @@ export default function CatalogoScreen() {
       <FlatList
         data={produtos}
         keyExtractor={(item, index) => item?.codigo ? String(item.codigo) : String(index)}
-        renderItem={({ item }) => <CardProduto produto={item} />}
+        // ✅ TRUQUE DO CACHE AQUI EMBAIXO:
+        renderItem={({ item }) => (
+            <CardProduto 
+                produto={{
+                    ...item,
+                    // Se tiver imagem, adiciona ?t=NUMERO_NOVO no final para forçar atualização
+                    imagem: item.imagem ? `${item.imagem}?t=${cacheBuster}` : null
+                }} 
+            />
+        )}
         numColumns={2} 
         columnWrapperStyle={styles.linhaGrid} 
         onEndReached={carregarMais}
