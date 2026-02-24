@@ -36,7 +36,7 @@ Um dos maiores desafios técnicos deste projeto foi a gestão do tráfego de mí
 * **Gestão de Imagens Integrada**: Interface unificada para upload e substituição de materiais promocionais utilizando a câmera do dispositivo ou a galeria local.
 
 ## Como Testar
-1. Faça o download do aplicativo através deste **[Link Oficial de Build (Expo EAS)](https://expo.dev/accounts/jacksonbbcosta/projects/merchAPP/builds/c1ab2257-b098-439b-934f-9d25d50a3848)**.
+1. Faça o download do aplicativo através deste **[Link Oficial de Build (Expo EAS)](https://expo.dev/accounts/jacksonbbcosta/projects/merchAPP/builds/97399d17-1ef4-4341-baf9-57a932e78d4b)**.
 2. Na página do Expo, clique em "Download" para baixar o arquivo `.apk`.
 3. Instale em um dispositivo Android físico ou emulador (ex: BlueStacks ou Android Studio).
 4. **Credenciais de Teste:**
